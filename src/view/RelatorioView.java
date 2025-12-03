@@ -19,9 +19,10 @@ public class RelatorioView {
         int opcao;
         do {
             System.out.println("\n--- RELATÓRIOS ---");
-            System.out.println("1. Reservas por período");
-            System.out.println("2. Faturamento");
-            System.out.println("3. Espaço mais usado");
+            System.out.println("1. Reservas realizadas em um período");
+            System.out.println("2. Faturamento por tipo de espaço");
+            System.out.println("3. Utilização por espaço");
+            System.out.println("4. Top espaços mais utilizados");
             System.out.println("0. Voltar");
             System.out.print("Opção: ");
             opcao = sc.nextInt();
@@ -35,7 +36,10 @@ public class RelatorioView {
                     faturamento();
                     break;
                 case 3:
-                    espacoMaisUsado();
+                    utilizacaoPorTipo();
+                    break;
+                case 4:
+                    topTiposEspacos();
                     break;
             }
         } while (opcao != 0);
@@ -52,13 +56,13 @@ public class RelatorioView {
             LocalDateTime inicio = LocalDateTime.parse(inputInicio);
             LocalDateTime fim = LocalDateTime.parse(inputFim);
             
-            List<Reserva> reservas = relatorioService.porPeriodo(inicio, fim);
+            List<Reserva> reservas = relatorioService.reservasPorPeriodo(inicio, fim);
             
-            System.out.println("\nReservas no período:");
+            System.out.println("\n=== RESERVAS NO PERÍODO ===");
             for (Reserva reserva : reservas) {
-                System.out.println(reserva.getEspaco().getNome() + " - " + 
-                                 reserva.getInicio() + " - R$" + 
-                                 reserva.calcularTotal());
+                System.out.println("• " + reserva.getEspaco().getNome() + 
+                                 " | " + reserva.getInicio() + 
+                                 " | R$" + reserva.calcularTotal());
             }
             System.out.println("Total: " + reservas.size() + " reservas");
             
@@ -70,39 +74,56 @@ public class RelatorioView {
     private void faturamento() {
         try {
             double total = relatorioService.getFaturamentoTotal();
-            System.out.println("\nFaturamento total: R$" + total);
-            
             double sala = relatorioService.getFaturamentoSalaReuniao();
-            double cabine = relatorioService.getFaturamentoCabine();
+            double cabine = relatorioService.getFaturamentoCabineIndividual();
             double auditorio = relatorioService.getFaturamentoAuditorio();
             
+            System.out.println("\n FATURAMENTO POR TIPO ");
             System.out.println("Sala de Reunião: R$" + sala);
             System.out.println("Cabine Individual: R$" + cabine);
             System.out.println("Auditório: R$" + auditorio);
+            System.out.println("\n");
+            System.out.println("TOTAL GERAL: R$" + total);
             
         } catch (Exception e) {
             System.out.println("Erro ao gerar faturamento");
         }
     }
     
-    private void espacoMaisUsado() {
+    // AGORA: Utilização por TIPO de espaço
+    private void utilizacaoPorTipo() {
         try {
-            String tipo = relatorioService.getEspacoMaisUsado();
-            int quantidade = relatorioService.getQuantidadeEspacoMaisUsado();
-            String detalhes = relatorioService.getDetalhesEspacos();
+            String[] utilizacao = relatorioService.getUtilizacaoPorTipo();
             
-            if (tipo.isEmpty()) {
-                System.out.println("\nNenhuma reserva confirmada.");
-            } else if (tipo.equals("Empate")) {
-            	System.out.println("\nDetalhes: " + detalhes);
-                System.out.println("Empate! com " + quantidade + " reserva(s)");
+            System.out.println("\n UTILIZAÇÃO POR ESPAÇO (HORAS) ");
+            if (utilizacao.length == 0) {
+                System.out.println("Nenhuma reserva confirmada.");
             } else {
-                System.out.println("\n" + tipo + ": " + quantidade);
-                System.out.println("Outros: " + detalhes.replace(tipo + ": " + quantidade + "  ", ""));
+                for (String item : utilizacao) {
+                    System.out.println("• " + item);
+                }
             }
             
         } catch (Exception e) {
-            System.out.println("Erro");
+            System.out.println("Erro ao gerar utilização");
+        }
+    }
+    
+    private void topTiposEspacos() {
+        try {
+            String[] top = relatorioService.getTopTiposEspacosMaisUtilizados();
+            
+            System.out.println("\n TOP ESPAÇOS MAIS UTILIZADOS ");
+            if (top.length == 0) {
+                System.out.println("Nenhuma reserva confirmada.");
+            } else {
+                for (String item : top) {
+                    System.out.println(item);
+                }
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Erro ao gerar ranking");
         }
     }
 }
