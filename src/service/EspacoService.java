@@ -22,6 +22,10 @@ public class EspacoService {
         if (espaco.getNome() == null || espaco.getNome().trim().isEmpty()) {
             throw new NomeInvalido("Nome obrigatório");
         }
+        String nome = espaco.getNome().trim();
+        if (nome.matches(".*\\d.*")) {
+            throw new NomeInvalido("Nome não pode conter números");
+        }
         if (espaco.getCapacidade() <= 0) {
             throw new CapacidadeInvalida("Capacidade inválida");
         }
@@ -30,11 +34,10 @@ public class EspacoService {
         }
         espacoDao.salvar(espaco);
     }
-
-    public List<Espaco> listar() {
+    public List<Espaco> listar() throws EspacoInvalido{
         List<Espaco> espacos = espacoDao.listar();
         if (espacos.isEmpty()) {
-            throw new EspacoInvalido("Sem espaços");
+        	throw new EspacoInvalido("Espaco vazio");
         }
         return espacos;
     }

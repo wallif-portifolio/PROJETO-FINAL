@@ -44,6 +44,8 @@ public class EspacoView {
                 case 5:
                     deletar();
                     break;
+                default:
+                    System.out.println("Opção inválida! Digite 0-5.");
             }
         } while (opcao != 0);
     }
@@ -89,7 +91,6 @@ public class EspacoView {
             
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
     }
     
@@ -113,7 +114,6 @@ public class EspacoView {
             System.out.println("Total: " + espacos.size() + " espaços");
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
     }
     
@@ -143,7 +143,6 @@ public class EspacoView {
             
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
     }
     
@@ -178,7 +177,6 @@ public class EspacoView {
             
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
     }
     
@@ -198,7 +196,7 @@ public class EspacoView {
             
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
+        
     }
 }

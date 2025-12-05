@@ -113,7 +113,6 @@ public class PagamentoView {
             
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
     }
     
@@ -132,7 +131,6 @@ public class PagamentoView {
             
         } catch (Exception e) {
             System.out.println("Erro: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 }
